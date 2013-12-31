@@ -43,6 +43,8 @@ mkdir -p "$APT_STATE_DIR/lists/partial"
 
 APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR -o dir::etc::sourceparts=$APT_ETC_DIR/sources.list.d"
 
+dpkg --add-architecture i386
+
 curl -L http://netcologne.dl.sourceforge.net/project/d-apt/files/d-apt.list -o $APT_ETC_DIR/sources.list.d/d-apt.list
 message "-----> added apt location for D compiler"
 apt-get $APT_OPTIONS update
