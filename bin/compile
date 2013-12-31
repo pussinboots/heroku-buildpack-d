@@ -85,7 +85,7 @@ message "-----> D compiler cmd found at $D_BIN"
 CAN_D_RUN=`$CACHE_DIR/dmd2/linux/bin32/dmd --version`
 message "-----> D compiler reports version: $CAN_D_RUN"
 
-export PATH = $PATH:$CACHE_DIR/dmd2/linux/bin32/dmd
+#export PATH = $PATH:$CACHE_DIR/dmd2/linux/bin32/dmd
 DUB_BIN=`ls -l $CACHE_DIR/dmd2/linux/bin32/dmd`
 message "-----> DUB package manager cmd found at $DUB_BIN"
 
