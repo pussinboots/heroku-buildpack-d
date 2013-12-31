@@ -66,7 +66,7 @@ for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
 done
 
 curl -L $D_COMPILER_URL -o dmd.zip
-unzip dmd.zip
+$BUILD_DIR/.apt/bin/unzip dmd.zip
 
 curl -L http://code.dlang.org/files/dub-0.9.20-linux-x86_64.tar.gz -o - | tar xzf -
 
