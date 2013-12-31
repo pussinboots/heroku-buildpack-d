@@ -53,8 +53,8 @@ apt-get $APT_OPTIONS -y -d --allow-unauthenticated install --reinstall d-apt-key
 apt-get $APT_OPTIONS update 
 #message "-----> perform apt install dmd-bin"
 #apt-get $APT_OPTIONS -y -d --ignore-missing install dmd-bin
-message "-----> perform apt install dub" 
-apt-get $APT_OPTIONS -y -d --ignore-missing install dub
+#message "-----> perform apt install dub" 
+#apt-get $APT_OPTIONS -y -d --ignore-missing install dub
 
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   topic "Installing $(basename $DEB)"
@@ -64,7 +64,7 @@ done
 curl -L $D_COMPILER_URL -o dmd.zip
 unzip dmd.zip
 
-#curl -L http://code.dlang.org/files/dub-0.9.20-linux-x86_64.tar.gz -o - | tar xzf -
+curl -L http://code.dlang.org/files/dub-0.9.20-linux-x86_64.tar.gz -o - | tar xzf -
 
 #message "-----> Copy D compiler to app root"
 #cp -r $CACHE_DIR/d-sdk $BUILD_DIR
@@ -82,11 +82,11 @@ CAN_D_RUN=`$CACHE_DIR/dmd2/linux/bin32/dmd --version`
 message "-----> D compiler reports version: $CAN_D_RUN"
 
 export PATH = $PATH:$CACHE_DIR/dmd2/linux/bin32/dmd
-#DUB_BIN=`ls -l $CACHE_DIR/dmd2/linux/bin32/dmd`
-#message "-----> DUB package manager cmd found at $DUB_BIN"
+DUB_BIN=`ls -l $CACHE_DIR/dmd2/linux/bin32/dmd`
+message "-----> DUB package manager cmd found at $DUB_BIN"
 
-#CAN_DUB_RUN=`$CACHE_DIR/dmd2/linux/bin32/dmd --version`
-#message "-----> DUB package manager reports version: $CAN_DUB_RUN"
+CAN_DUB_RUN=`$CACHE_DIR/dmd2/linux/bin32/dmd --version`
+message "-----> DUB package manager reports version: $CAN_DUB_RUN"
 
 cd $BUILD_DIR
 
