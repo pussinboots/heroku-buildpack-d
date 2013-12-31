@@ -74,7 +74,7 @@ $BUILD_DIR/.apt/usr/bin/unzip dmd.zip
 #curl -L http://code.dlang.org/files/dub-0.9.20-linux-x86_64.tar.gz -o - | tar xzf -
 git clone https://github.com/rejectedsoftware/dub
 cd dub
-./build.sh
+#./build.sh
 cd ..
 
 #message "-----> Copy D compiler to app root"
