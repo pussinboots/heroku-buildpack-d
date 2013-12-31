@@ -82,15 +82,15 @@ curl -L http://code.dlang.org/files/dub-0.9.20-linux-x86_64.tar.gz -o - | tar xz
 D_BIN=`ls -l $CACHE_DIR/dmd2/linux/bin64/dmd`
 message "-----> D compiler cmd found at $D_BIN"
 
-CAN_D_RUN=`$CACHE_DIR/dmd2/linux/bin64/dmd`
-message "-----> D compiler reports version: $CAN_D_RUN"
+#CAN_D_RUN=`$CACHE_DIR/dmd2/linux/bin64/dmd`
+#message "-----> D compiler reports version: $CAN_D_RUN"
 
 #export PATH = $PATH:$CACHE_DIR/dmd2/linux/bin32/dmd
 DUB_BIN=`ls -l $CACHE_DIR/dub`
 message "-----> DUB package manager cmd found at $DUB_BIN"
 
-CAN_DUB_RUN=`$CACHE_DIR/dub`
-message "-----> DUB package manager reports version: $CAN_DUB_RUN"
+#CAN_DUB_RUN=`$CACHE_DIR/dub`
+#message "-----> DUB package manager reports version: $CAN_DUB_RUN"
 
 cd $BUILD_DIR
 
