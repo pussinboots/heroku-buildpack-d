@@ -62,6 +62,8 @@ apt-get $APT_OPTIONS update
 #apt-get $APT_OPTIONS -y -d --ignore-missing install dub
 message "-----> perform apt install unzip" 
 apt-get $APT_OPTIONS -y -d --ignore-missing install unzip
+message "-----> perform apt install pkg-config" 
+apt-get install pkg-config
 
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   topic "Installing $(basename $DEB)"
