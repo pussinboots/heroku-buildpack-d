@@ -98,4 +98,8 @@ message "-----> DUB package manager cmd found at $DUB_BIN"
 export PATH=$PATH:$CACHE_DIR/dmd2/linux/bin64/:$CACHE_DIR/
 cd $BUILD_DIR
 
-dub build
+DUB_BIN=`ls -l $CACHE_DIR/dub`
+message "-----> DUB package manager cmd found at $DUB_BIN"
+
+ls -lh
+$CACHE_DIR/dub build
