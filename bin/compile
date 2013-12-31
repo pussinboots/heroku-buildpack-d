@@ -55,6 +55,8 @@ apt-get $APT_OPTIONS update
 #apt-get $APT_OPTIONS -y -d --ignore-missing install dmd-bin
 #message "-----> perform apt install dub" 
 #apt-get $APT_OPTIONS -y -d --ignore-missing install dub
+#message "-----> perform apt install dub" 
+#apt-get $APT_OPTIONS -y -d --ignore-missing install dub
 
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   topic "Installing $(basename $DEB)"
