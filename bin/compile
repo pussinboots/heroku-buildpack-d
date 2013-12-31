@@ -108,4 +108,4 @@ export PATH=$PATH:/app/tmp/cache/dub/bin/
 
 cd $BUILD_DIR
 ls -lh
-dub build
+dub --vverbose build
