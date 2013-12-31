@@ -37,16 +37,16 @@ mkdir -p "$APT_STATE_DIR/lists/partial"
 
 APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 
-curl -L http://netcologne.dl.sourceforge.net/project/d-apt/files/d-apt.list -o /etc/apt/sources.list.d/d-apt.list
+sudo curl -L http://netcologne.dl.sourceforge.net/project/d-apt/files/d-apt.list -o /etc/apt/sources.list.d/d-apt.list
 message "-----> added apt location for D compiler"
-apt-get update
+sudo apt-get update
 message "-----> perform apt update" 
-apt-get -y --allow-unauthenticated install --reinstall d-apt-keyring
-apt-get update 
+sudo apt-get -y --allow-unauthenticated install --reinstall d-apt-keyring
+sudo apt-get update 
 message "-----> perform apt install dub" 
-apt-get install dub
+sudo apt-get install dub
 message "-----> perform apt install dmd-bin" 
-apt-get install dmd-bin
+sudo apt-get install dmd-bin
 
 #curl -L $D_COMPILER_URL -o dmd.zip
 #unzip dmd.zip
