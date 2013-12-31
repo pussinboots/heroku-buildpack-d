@@ -90,7 +90,7 @@ message "-----> D compiler cmd found at $D_BIN"
 
 #export PATH = $PATH:$CACHE_DIR/dmd2/linux/bin32/dmd
 DUB_BIN=`ls -l $CACHE_DIR/dub`
-chmod 755 $DUB_BIN
+chmod 755 $CACHE_DIR/dub
 message "-----> DUB package manager cmd found at $DUB_BIN"
 
 #CAN_DUB_RUN=`$CACHE_DIR/dub`
