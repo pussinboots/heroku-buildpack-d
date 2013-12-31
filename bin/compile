@@ -15,6 +15,10 @@ function message {
   sync
 }
 
+function topic() {
+  echo "-----> $*"
+}
+
 MACHINE=`uname -a`
 message "-----> Welcome, this machine is: $MACHINE"
 
