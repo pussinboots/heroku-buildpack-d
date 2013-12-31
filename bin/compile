@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+#set -x
+unset GIT_DIR
+
+mkdir -p "$1" "$2"
+BUILD_DIR=$(cd "$1/" && pwd)
+CACHE_DIR=$(cd "$2/" && pwd)
+
+function message {
+  echo "$1"
+  sync
+}
+
+MACHINE=`uname -a`
+message "-----> Welcome, this machine is: $MACHINE"
+
+if [ -z "$D_COMPILER_URL" ]; then
+    message "ERROR: you must specify D_COMPILER_URL to the D compiler for Linux. See README for this buildpack."
+    exit 1
+fi
+
+cd $BUILD_DIR
+
+message "-----> Installing D compiler via apt"
+
+cd $CACHE_DIR
+
+APT_CACHE_DIR="$CACHE_DIR/apt/cache"
+APT_STATE_DIR="$CACHE_DIR/apt/state"
+
+mkdir -p "$APT_CACHE_DIR/archives/partial"
+mkdir -p "$APT_STATE_DIR/lists/partial"
+
+APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
+
+sudo wget http://netcologne.dl.sourceforge.net/project/d-apt/files/d-apt.list -O /etc/apt/sources.list.d/d-apt.list
+sudo apt-get update 
+sudo apt-get -y --allow-unauthenticated install --reinstall d-apt-keyring
+sudo apt-get update 
+sudo apt-get install dub
+sudo apt-get install dmd-bin
+
+#curl -L $D_COMPILER_URL -o dmd.zip
+#unzip dmd.zip
+
+curl -L http://code.dlang.org/files/dub-0.9.20-linux-x86_64.tar.gz -o - | tar xzf -
+
+#message "-----> Copy D compiler to app root"
+#cp -r $CACHE_DIR/d-sdk $BUILD_DIR
+
+# we need to copy the sdk into the /app folder in order for the sdk libraries
+# to be referenced correctly
+# reason being that the /tmp folder will be deleted after build, and /app
+# resembles the location of the ready built app
+# cp -r $CACHE_DIR/dart-sdk /app
+
+#D_BIN=`ls -l $CACHE_DIR/dmd2/linux/bin32/dmd`
+#message "-----> D compiler cmd found at $D_BIN"
+
+#CAN_D_RUN=`$CACHE_DIR/dmd2/linux/bin32/dmd --version`
+#message "-----> D compiler reports version: $CAN_D_RUN"
+
+#DUB_BIN=`ls -l $CACHE_DIR/dmd2/linux/bin32/dmd`
+#message "-----> DUB package manager cmd found at $DUB_BIN"
+
+#CAN_DUB_RUN=`$CACHE_DIR/dmd2/linux/bin32/dmd --version`
+#message "-----> DUB package manager reports version: $CAN_DUB_RUN"
+
+cd $BUILD_DIR
+
+dub build
