@@ -18,10 +18,10 @@ function message {
 MACHINE=`uname -a`
 message "-----> Welcome, this machine is: $MACHINE"
 
-if [ -z "$D_COMPILER_URL" ]; then
-    message "ERROR: you must specify D_COMPILER_URL to the D compiler for Linux. See README for this buildpack."
-    exit 1
-fi
+#if [ -z "$D_COMPILER_URL" ]; then
+#    message "ERROR: you must specify D_COMPILER_URL to the D compiler for Linux. See README for this buildpack."
+#    exit 1
+#fi
 
 cd $BUILD_DIR
 
