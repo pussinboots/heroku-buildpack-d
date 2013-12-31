@@ -105,5 +105,6 @@ cd $BUILD_DIR
 DUB_BIN=`ls -l $CACHE_DIR/dub`
 message "-----> DUB package manager cmd found at $DUB_BIN"
 
+$CACHE_DIR/dmd2/linux/bin64/dmd source/app.d
 ls -lh
 $CACHE_DIR/dub build
