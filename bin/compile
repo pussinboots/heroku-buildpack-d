@@ -33,6 +33,8 @@ message "-----> Installing D compiler via apt"
 
 cd $CACHE_DIR
 
+D_COMPILER_URL=http://downloads.dlang.org.s3-website-us-east-1.amazonaws.com/releases/2013/dmd.2.063.2.zip
+
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
 APT_ETC_DIR="$CACHE_DIR/apt/etc"
