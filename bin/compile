@@ -49,7 +49,8 @@ apt-get $APT_OPTIONS update
 message "-----> perform apt update" 
 apt-get $APT_OPTIONS -y -d --allow-unauthenticated install --reinstall d-apt-keyring
 apt-get $APT_OPTIONS update 
-message "-----> perform apt install dmd-bin" 
+message "-----> perform apt install dmd-bin"
+apt-get $APT_OPTIONS -y -d install libphobos2-dev 
 apt-get $APT_OPTIONS -y -d install dmd-bin
 message "-----> perform apt install dub" 
 apt-get $APT_OPTIONS -y -d install dub
