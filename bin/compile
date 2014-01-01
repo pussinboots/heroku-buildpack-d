@@ -85,10 +85,6 @@ else
     echo "Running dub-prebuild…" | indent
     ./dub-prebuild "$BUILD_DIR" "$CACHE_DIR" | indent
   fi
-  
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/app/opt/lib
-export LD_RUN_PATH=$LD_RUN_PATH:/app/opt/lib
-export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/app/opt/lib/pkgconfig
 
 chmod 755 /app/opt/lib/pkgconfig
 
