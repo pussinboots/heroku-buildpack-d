@@ -115,7 +115,7 @@ export PATH=$PATH:/app/tmp/cache/dub/bin/
 ldconfig -v -C /tmp/ld.so.cache
 
 message "-----> pkconfig "
-pkg-config --libs libevent
+#pkg-config --libs libevent
 
 cd $BUILD_DIR
 ls -lh
