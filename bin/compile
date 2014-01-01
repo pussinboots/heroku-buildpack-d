@@ -63,7 +63,7 @@ apt-get $APT_OPTIONS update
 message "-----> perform apt install unzip" 
 apt-get $APT_OPTIONS -y -d --ignore-missing install unzip
 message "-----> perform apt install libevent libcrypto libssl libevent-dev libssl-dev" 
-apt-get $APT_OPTIONS -y -d --ignore-missing install libevent-dev libssl-dev
+apt-get $APT_OPTIONS -y -d --ignore-missing install libevent libcrypto libssl libevent-dev libssl-dev
 message "-----> perform apt install pkg-config" 
 apt-get $APT_OPTIONS -y -d --ignore-missing install pkg-config
 
