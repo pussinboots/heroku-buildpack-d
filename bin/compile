@@ -88,7 +88,7 @@ else
   
   echo
   echo "Running dub build…" | indent
-  if dub build --build=release; then
+  if dub --vverbose build --build=release; then
     echo
     echo "Build was successful" | indent
     status=0
