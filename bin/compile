@@ -1,122 +1,102 @@
-#!/usr/bin/env bash
-# bin/compile <build-dir> <cache-dir>
+#!/bin/sh
 
-# fail fast
-set -e
-#set -x
-unset GIT_DIR
+BUILDPACK_DIR=$(cd "$(dirname $0)" && pwd)
 
 mkdir -p "$1" "$2"
 BUILD_DIR=$(cd "$1/" && pwd)
 CACHE_DIR=$(cd "$2/" && pwd)
 
-function message {
-  echo "$1"
-  sync
+TOOL_DIR=$BUILD_DIR/toolchain
+ARCHIVE_DIR=$CACHE_DIR/archives
+mkdir -p "$TOOL_DIR" "$ARCHIVE_DIR"
+
+DMD_ARCHIVE_PATH=http://downloads.dlang.org.s3-website-us-east-1.amazonaws.com/releases/2013
+DMD_ARCHIVE=dmd.2.062
+DUB_ARCHIVE_PATH=http://code.dlang.org/files
+DUB_ARCHIVE=dub-0.9.20-linux-x86_64
+
+indent() {
+  sed -u 's/^/       /'
 }
 
-function topic() {
-  echo "-----> $*"
-}
+# download latest archives
+cd $ARCHIVE_DIR
+if [ ! -f $ARCHIVE_DIR/$DMD_ARCHIVE.zip ]; then
+    echo
+    echo "-----> Downloading DMD"
+    rm -f dmd*.zip
+    curl $DMD_ARCHIVE_PATH/$DMD_ARCHIVE.zip -o $DMD_ARCHIVE.zip
+fi | indent
+if [ ! -f $ARCHIVE_DIR/$DUB_ARCHIVE.tar.gz ]; then
+    echo
+    echo "-----> Downloading dub package manager"
+    rm -f dub*.tar.gz
+    curl $DUB_ARCHIVE_PATH/$DUB_ARCHIVE.tar.gz -o $DUB_ARCHIVE.tar.gz 
+fi | indent
 
-MACHINE=`uname -a`
-message "-----> Welcome, this machine is: $MACHINE"
+# initialise toolchain
+export PATH=$TOOL_DIR/dmd2/linux/bin64:$TOOL_DIR/$DUB_ARCHIVE/bin:$BUILDPACK_DIR:$PATH
+echo
+echo "-----> Setting PATH: $PATH"
+echo
+echo "-----> Initializing toolchain"
+cd $TOOL_DIR
 
-#if [ -z "$D_COMPILER_URL" ]; then
-#    message "ERROR: you must specify D_COMPILER_URL to the D compiler for Linux. See README for this buildpack."
-#    exit 1
-#fi
+# expand DMD
+7za x $ARCHIVE_DIR/$DMD_ARCHIVE.zip > /dev/null
 
+# expand dub
+mkdir -p $TOOL_DIR/$DUB_ARCHIVE/bin
+cd $TOOL_DIR/$DUB_ARCHIVE/bin
+tar xzf $ARCHIVE_DIR/$DUB_ARCHIVE.tar.gz
+
+echo
+echo "-----> Building app"
+
+# link the dub cache to the cache folder
+mkdir -p $CACHE_DIR/.dub
+
+if [ ! -e $BUILD_DIR/.dub ]; then
+    ln -s $CACHE_DIR/.dub $BUILD_DIR/.dub
+fi
+
+# if package.json has contents, run dub build
+status=1
+if [ ! -s $BUILD_DIR/package.json ]; then
+  echo
+  echo "!!! package.json was empty" | indent
+  status=1
+else
+  # pre-build hook
+  cd $BUILD_DIR
+  if [ -f dub-prebuild ]; then
+    echo
+    echo "Running dub-prebuild…" | indent
+    ./dub-prebuild "$BUILD_DIR" "$CACHE_DIR" | indent
+  fi
+  
+  echo
+  echo "Running dub build…" | indent
+  if dub build --build=release; then
+    echo
+    echo "Build was successful" | indent
+    status=0
+  else
+    echo
+    echo "!!! Build failed" | indent
+    status=1
+  fi
+fi
+
+# post-build hook
 cd $BUILD_DIR
+if [ -f dub-postbuild ]; then
+    echo
+    echo "Running dub-postbuild…" | indent
+    ./dub-postbuild "$BUILD_DIR" "$CACHE_DIR" | indent
+fi
 
-message "-----> Installing D compiler via apt"
+# clean up any remaining sources
+rm -rf "$TOOL_DIR" source src views
 
-cd $CACHE_DIR
-
-D_COMPILER_URL=http://downloads.dlang.org.s3-website-us-east-1.amazonaws.com/releases/2013/dmd.2.063.2.zip
-
-APT_CACHE_DIR="$CACHE_DIR/apt/cache"
-APT_STATE_DIR="$CACHE_DIR/apt/state"
-APT_ETC_DIR="$CACHE_DIR/apt/etc"
-
-mkdir -p "$APT_ETC_DIR/sources.list.d"
-mkdir -p "$APT_CACHE_DIR/archives/partial"
-mkdir -p "$APT_STATE_DIR/lists/partial"
-
-APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR -o dir::etc::sourceparts=$APT_ETC_DIR/sources.list.d"
-
-#curl -L http://netcologne.dl.sourceforge.net/project/d-apt/files/d-apt.list -o $APT_ETC_DIR/sources.list.d/d-apt.list
-#message "-----> added apt location for D compiler"
-message "-----> perform apt update" 
-apt-get $APT_OPTIONS update
-#message "-----> perform install libc6" 
-#apt-get $APT_OPTIONS -y -d --ignore-missing install libc6-dev
-
-#apt-get $APT_OPTIONS -y -d --allow-unauthenticated install --reinstall d-apt-keyring
-#apt-get $APT_OPTIONS update 
-#message "-----> perform apt install dmd-bin"
-#apt-get $APT_OPTIONS -y -d --ignore-missing install dmd-bin
-#message "-----> perform apt install dub" 
-#apt-get $APT_OPTIONS -y -d --ignore-missing install dub
-#message "-----> perform apt install dub" 
-#apt-get $APT_OPTIONS -y -d --ignore-missing install dub
-message "-----> perform apt install unzip" 
-apt-get $APT_OPTIONS -y -d --ignore-missing install unzip
-message "-----> perform apt install libevent libcrypto libssl libevent-dev libssl-dev" 
-apt-get $APT_OPTIONS -y -d --ignore-missing install libevent-dev libssl-dev
-apt-cache search libevent
-apt-get $APT_OPTIONS -y -d --ignore-missing install libev-dev libev3
-message "-----> perform apt install pkg-config" 
-apt-get $APT_OPTIONS -y -d --ignore-missing install pkg-config
-
-for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
-  topic "Installing $(basename $DEB)"
-  dpkg -x $DEB $BUILD_DIR/.apt/
-done
-
-curl -L $D_COMPILER_URL -o dmd.zip
-$BUILD_DIR/.apt/usr/bin/unzip dmd.zip
-
-#curl -L http://code.dlang.org/files/dub-0.9.20-linux-x86_64.tar.gz -o - | tar xzf -
-
-#message "-----> Copy D compiler to app root"
-#cp -r $CACHE_DIR/d-sdk $BUILD_DIR
-
-# we need to copy the sdk into the /app folder in order for the sdk libraries
-# to be referenced correctly
-# reason being that the /tmp folder will be deleted after build, and /app
-# resembles the location of the ready built app
-# cp -r $CACHE_DIR/dart-sdk /app
-
-D_BIN=`ls -l $CACHE_DIR/dmd2/linux/bin64/dmd`
-message "-----> D compiler cmd found at $D_BIN"
-
-#CAN_D_RUN=`$CACHE_DIR/dmd2/linux/bin64/dmd`
-#message "-----> D compiler reports version: $CAN_D_RUN"
-
-#export PATH = $PATH:$CACHE_DIR/dmd2/linux/bin32/dmd
-#chmod 755 $CACHE_DIR/dub
-#DUB_BIN=`ls -l $CACHE_DIR/dub`
-#message "-----> DUB package manager cmd found at $DUB_BIN"
-
-#CAN_DUB_RUN=`$CACHE_DIR/dub`
-#message "-----> DUB package manager reports version: $CAN_DUB_RUN"
-export PATH=$PATH:$CACHE_DIR/dmd2/linux/bin64/:$CACHE_DIR/
-
-git clone https://github.com/pussinboots/dub
-cd dub
-./build.sh
-cd ..
-
-DUB_BIN=`ls -lh /app/tmp/cache/dub/bin/dub`
-message "-----> DUB package manager cmd found at $DUB_BIN"
-export PATH=$PATH:/app/tmp/cache/dub/bin/
-
-#ldconfig -v -C /tmp/ld.so.cache
-
-message "-----> pkconfig "
-#pkg-config --libs libevent
-
-cd $BUILD_DIR
-ls -lh
-dub --vverbose build
+exit $status
