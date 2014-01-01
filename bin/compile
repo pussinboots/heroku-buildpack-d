@@ -11,7 +11,7 @@ ARCHIVE_DIR=$CACHE_DIR/archives
 mkdir -p "$TOOL_DIR" "$ARCHIVE_DIR"
 
 DMD_ARCHIVE_PATH=http://downloads.dlang.org.s3-website-us-east-1.amazonaws.com/releases/2013
-DMD_ARCHIVE=dmd.2.062
+DMD_ARCHIVE=dmd.2.063.2
 DUB_ARCHIVE_PATH=http://code.dlang.org/files
 DUB_ARCHIVE=dub-0.9.20-linux-x86_64
 
