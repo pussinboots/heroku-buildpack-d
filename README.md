@@ -21,10 +21,10 @@ Travis Ci
 
 How to build a project written with the D language see the .travis.yml file here https://github.com/pussinboots/dfirstweb/blob/master/.travis.yml .
 
-  language: dlang
-  script: dub build
-  before_install: 
-  - sudo wget http://netcologne.dl.sourceforge.net/project/d-apt/files/d-apt.list -O /etc/apt/sources.list.d/d-apt.list
-  - sudo apt-get update && sudo apt-get -y --allow-unauthenticated install --reinstall d-apt-keyring && sudo apt-get update
-  - sudo apt-get install dub
-  - sudo apt-get install dmd-bin
+    language: dlang
+    script: dub build
+    before_install: 
+    - sudo wget http://netcologne.dl.sourceforge.net/project/d-apt/files/d-apt.list -O /etc/apt/sources.list.d/d-apt.list
+    - sudo apt-get update && sudo apt-get -y --allow-unauthenticated install --reinstall d-apt-keyring && sudo apt-get update
+    - sudo apt-get install dub
+    - sudo apt-get install dmd-bin
