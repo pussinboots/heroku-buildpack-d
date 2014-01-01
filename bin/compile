@@ -51,10 +51,6 @@ cd $TOOL_DIR
 7za x $ARCHIVE_DIR/$DMD_ARCHIVE.zip > /dev/null
 
 # expand dub
-#mkdir -p $TOOL_DIR/$DUB_ARCHIVE/bin
-#cd $TOOL_DIR/$DUB_ARCHIVE/bin
-#tar xzf $ARCHIVE_DIR/$DUB_ARCHIVE.tar.gz
-
 git clone https://github.com/pussinboots/dub
 cd dub
 ./build.sh | indent
@@ -96,7 +92,7 @@ ls -lh /app/opt/lib
 ls -lh /app/opt/lib/pkgconfig
   echo
   echo "Running dub build…" | indent
-  if dub --vverbose build; then
+  if dub build; then
     echo
     echo "Build was successful" | indent
     status=0
