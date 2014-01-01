@@ -67,6 +67,11 @@ if [ ! -e $BUILD_DIR/.dub ]; then
     ln -s $CACHE_DIR/.dub $BUILD_DIR/.dub
 fi
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/app/opt/lib
+export LD_RUN_PATH=$LD_RUN_PATH:/app/opt/lib
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/app/opt/lib/pkgconfig
+chmod 755 /app/opt/lib/pkgconfig
+
 # if package.json has contents, run dub build
 status=1
 if [ ! -s $BUILD_DIR/package.json ]; then
@@ -81,15 +86,7 @@ else
     echo "Running dub-prebuild…" | indent
     ./dub-prebuild "$BUILD_DIR" "$CACHE_DIR" | indent
   fi
-  
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/app/opt/lib
-export LD_RUN_PATH=$LD_RUN_PATH:/app/opt/lib
-export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/app/opt/lib/pkgconfig
 
-chmod 755 /app/opt/lib/pkgconfig
-
-ls -lh /app/opt/lib
-ls -lh /app/opt/lib/pkgconfig
   echo
   echo "Running dub build…" | indent
   if dub build; then
