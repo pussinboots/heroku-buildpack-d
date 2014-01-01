@@ -96,7 +96,7 @@ ls -lh /app/opt/lib
 ls -lh /app/opt/lib/pkgconfig
   echo
   echo "Running dub build…" | indent
-  if dub --vverbose build --build=release; then
+  if dub --vverbose build; then
     echo
     echo "Build was successful" | indent
     status=0
