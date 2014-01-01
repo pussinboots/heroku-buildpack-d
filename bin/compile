@@ -82,7 +82,7 @@ else
     echo
     echo "Running dub-prebuild…" | indent
     ./dub-prebuild "$BUILD_DIR" "$CACHE_DIR" | indent
-    #chmod 755 /app/opt/lib/pkgconfig
+    chmod 755 /app/opt/lib/pkgconfig
   fi
 
   echo
