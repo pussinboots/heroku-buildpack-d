@@ -109,7 +109,9 @@ cd ..
 DUB_BIN=`ls -lh /app/tmp/cache/dub/bin/dub`
 message "-----> DUB package manager cmd found at $DUB_BIN"
 export PATH=$PATH:/app/tmp/cache/dub/bin/
-ldconfig -v
+
+mkdir -p /tmp/ld.so.cache
+ldconfig -v -C /tmp/ld.so.cache
 
 message "-----> pkconfig "
 pkg-config --libs libevent
