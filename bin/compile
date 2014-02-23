@@ -35,8 +35,8 @@ fi | indent
 #fi | indent
 
 
-DUB_BIN=`ls -lh /app/tmp/cache/dub/bin/dub`
-message "-----> DUB package manager cmd found at $DUB_BIN"
+#DUB_BIN=`ls -lh /app/tmp/cache/dub/bin/dub`
+#message "-----> DUB package manager cmd found at $DUB_BIN"
 
 
 # initialise toolchain
