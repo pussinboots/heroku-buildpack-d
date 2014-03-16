@@ -11,9 +11,9 @@ ARCHIVE_DIR=$CACHE_DIR/archives
 mkdir -p "$TOOL_DIR" "$ARCHIVE_DIR"
 
 DMD_ARCHIVE_PATH=http://downloads.dlang.org/releases/2013
-DMD_ARCHIVE=dmd.2.064.2
+DMD_ARCHIVE=dmd.2.065.0
 DUB_ARCHIVE_PATH=http://code.dlang.org/files
-DUB_ARCHIVE=dub-0.9.20-linux-x86_64
+DUB_ARCHIVE=dub-0.9.21-linux-x86_64
 
 indent() {
   sed -u 's/^/       /'
